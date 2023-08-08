@@ -22,9 +22,16 @@ def main_loop():
     st.title("OpenCV Image Filters")
     st.subheader("This app allows you to play with Image filters!")
 
-    side_col1, side_col2 = st.sidebar.columns(2)
-    upload = side_col1.button("Upload image")
-    capture = side_col2.button("Capture photo")
+    input_type = st.sidebar.radio(
+        "How do you want to input your image?",
+        ('Upload image', 'Webcam capture'))
+
+    if input_type == 'Webcam capture':
+        capture = True
+        upload = False
+    else:
+        capture = False
+        upload = True
 
     blur_rate = st.sidebar.slider("Blurring", min_value=0.5, max_value=3.5)
     brightness_amount = st.sidebar.slider("Brightness", min_value=-50, max_value=50, value=0)
@@ -34,10 +41,12 @@ def main_loop():
         image_file = st.camera_input("Take a picture")
         if not image_file:
             return None
-    else:
+    elif upload:
         image_file = st.file_uploader("Upload Your Image", type=['jpg', 'png', 'jpeg'])
         if not image_file:
             return None
+    else:
+        return None
 
     col1, col2 = st.columns(2)
 
@@ -46,10 +55,7 @@ def main_loop():
         col1.image(image_file)
     else:
         return None
-
-    # original_image = Image.open(image_file)
-    # original_image = np.array(original_image)
-
+    
     bytes_data = image_file.getvalue()
     original_image = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
     rgb = cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB)
