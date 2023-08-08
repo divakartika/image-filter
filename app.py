@@ -2,6 +2,11 @@ import cv2
 import streamlit as st
 import numpy as np
 
+st.set_page_config(
+    page_title="OpenCV Image Filters",
+    page_icon="https://raw.githubusercontent.com/wiki/opencv/opencv/logo/OpenCV_logo_no_text.png",
+    initial_sidebar_state="expanded"
+)
 
 def brighten_image(image, amount):
     img_bright = cv2.convertScaleAbs(image, beta=amount)
